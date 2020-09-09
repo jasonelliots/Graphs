@@ -53,7 +53,6 @@ class Queue():
     def size(self):
         return len(self.queue)
 
-
 class Graph:
     def __init__(self):
         self.vertices = {}
@@ -79,22 +78,34 @@ def build_graph(ancestors):
     
     return graph 
 
-def get_parents(child):
+# standalone get_neighbors implementation 
 
-    parents = []
+def get_parents(ancestors, child):
+    current_node = child
+    parents_dict = {}
+
+    for parent, child in ancestors:
+        parents_dict[child] = []
+        parents_dict[parent] = []
+    for parent, child in ancestors:
+        # set the value for that childs key to the parent + all other parents 
+        parents_dict[child].append(parent)
+
+    return parents_dict[current_node]
     
+    # print(parents_dict[current_node])
+    # print(parents_dict)
 
 # using BFS
 
 def earliest_ancestor(ancestors, starting_node):
-    graph = build_graph(ancestors)
 
     q = Queue()
 
     visited = set()
 
     ### base case if starting_node has no parents
-    if len(graph.get_neighbors(starting_node)) == 0:
+    if len(get_parents(ancestors, starting_node)) == 0:
         return -1 
     ###
 
@@ -114,13 +125,23 @@ def earliest_ancestor(ancestors, starting_node):
         if current_node not in visited:
             visited.add(current_node)
 
-            parents = graph.get_neighbors(current_node)
+            parents = get_parents(ancestors, current_node)
 
             for parent in parents:
                 new_path = path + [parent]
                 q.enqueue(new_path)
     
     return longest_path[-1]
+
+
+
+
+
+
+test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
+
+get_parents(test_ancestors, 5)
+
 
 
 # using DFS 
