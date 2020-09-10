@@ -80,6 +80,7 @@ def bfs(starting_vertex, destination_vertex):
             current_vertex = current_path[-1]
 
             # Check if the current vertex has not been visited:
+        # need to update this with logic to see if the room has any unvisited directions 
             if current_vertex not in visited_vertices:
 
                 # CHECK IF THE CURRENT VERTEX IS DESTINATION 
@@ -91,13 +92,13 @@ def bfs(starting_vertex, destination_vertex):
                 # Mark the current vertex as visited
                 visited_vertices.add(current_vertex)
 
-            # need to define a get_neighbors function 
-                for neighbor_vertex in get_neighbors(current_vertex):
+            # need to define a get_neighbors function - draw from dft logic line 124-130 --
+                for exit_direction in current_vertex.get_exits():
                 # Queue up NEW paths with each neighbor:
                     # append the neighbor to current path 
                     # extra for search 
                     new_path = list(current_path)
-                    new_path.append(neighbor_vertex)
+                    new_path.append(current_vertex.get_room_in_direction(exit_direction))
                     # queue up NEW path    
                     queue.enqueue(new_path)
 
@@ -152,6 +153,7 @@ def path_finder():
             traversal_path.append(reverse[last])
             
             # alternative - try bfs here - send out the sonar for closest room with unexplored neighbors 
+            # what extra parameters do I need to pass into bfs - going to be grabbing some of the logic from the dft above 
             # keep track of the path to get there, and when you find it - return that path (list of rooms may need to be translated to list of directions)
             # append that path to the master list 
             # loop through that path and make all of those moves with player.travel 
