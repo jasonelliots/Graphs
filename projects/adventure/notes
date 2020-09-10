@@ -1,0 +1,8 @@
+Get to the point where you're in a given room and all of the directions have been visited (depth first). Then, you need to find the closest unvisited room (shortest path - breadth first)(bfs with '?' as target), and walk that way 
+
+# start with dft algo *DRILL* pick a direction to go into the maze as far as you can go until you hit a dead end 
+# then back track to the most recent (shortest path) room with an unexplored path, repeat *DRILL*
+    # need some way to keep track of most recent room with an unexplored path 
+
+how could I do it in fewer moves?
+    Instead of reversing and going back the way you came, find closest unvisitied room (bfs) 
