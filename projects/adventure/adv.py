@@ -8,7 +8,6 @@ from ast import literal_eval
 # Load world
 world = World()
 
-
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
@@ -58,7 +57,6 @@ class Queue():
     def size(self):
         return len(self.queue)
 
-
 def bfs(current_room, visited):
       
         # queue to keep track of rooms to check out 
@@ -97,7 +95,6 @@ def bfs(current_room, visited):
                     new_path.append(current_vertex.get_room_in_direction(exit_direction))
                     # queue up NEW path    
                     queue.enqueue(new_path)
-
 
 # dictionary for reverse directions 
 reverse = {
@@ -141,33 +138,33 @@ def path_finder():
 
         # otherwise, there aren't any possible moves to unvisited rooms, we need to backtrack to most recent room with a possible move 
         else:
-            # pop the last direction we took off the stack and store that value 
-            last = stack.pop()
-            # backtrack one move 
-            player.travel(reverse[last])
-            # add backtracking move to traversal_path - direction masterlist 
-            traversal_path.append(reverse[last])
+            # # pop the last direction we took off the stack and store that value 
+            # last = stack.pop()
+            # # backtrack one move 
+            # player.travel(reverse[last])
+            # # add backtracking move to traversal_path - direction masterlist 
+            # traversal_path.append(reverse[last])
             
             # maybe more efficient alternative - send out the sonar for closest room with unexplored neighbors 
 
             # found path to closest room with an unexplored exit 
-            # found_path = bfs(player.current_room, visited)
+            found_path = bfs(player.current_room, visited)
             # print(found_path[0])
 
             #  when this loop ends - the current room should be updated to a room with an unexplored exit - can restart with dft 
-            # for room in found_path:
-            #     # add room to visited rooms 
-            #     visited.add(room)
-            #     # print(visited)
-            #     # loop through the exit directions of the current room 
-            #     for exit_direction in player.current_room.get_exits():
-            #         # if the room at this particular exit direction is the room in found path (room toward the closest unexplored room)
-            #         if player.current_room.get_room_in_direction(exit_direction) == room:
-            #             # add that direction to the traversal_path masterlist
-            #             traversal_path.append(exit_direction)
-            #             # make the player travel that way so current room is updated and loop can start over 
-            #             player.travel(exit_direction)
-            #             # print(player.current_room)
+            for room in found_path:
+                # add room to visited rooms 
+                visited.add(room)
+                # print(visited)
+                # loop through the exit directions of the current room 
+                for exit_direction in player.current_room.get_exits():
+                    # if the room at this particular exit direction is the room in found path (room toward the closest unexplored room)
+                    if player.current_room.get_room_in_direction(exit_direction) == room:
+                        # add that direction to the traversal_path masterlist
+                        traversal_path.append(exit_direction)
+                        # make the player travel that way so current room is updated and loop can start over 
+                        player.travel(exit_direction)
+                        print(player.current_room)
             
 
 # call function to populate traversal_path 
