@@ -59,44 +59,40 @@ class Queue():
         return len(self.queue)
 
 
-def bfs(starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        # Create an empty queue and enqueue the PATH TO starting_vertex
+def bfs(current_room, visited):
+      
+        # queue to keep track of rooms to check out 
         queue = Queue()
-        # Create an empty set to track visited vertices 
-        visited_vertices = set()
     
-        queue.enqueue([starting_vertex])
+        # enque current room - will need to leave this room off of final list 
+        queue.enqueue([current_room])
 
         # while the queue is not empty:
         while queue.size() > 0: 
             # get the current vertex PATH (deque from queue)
             current_path = queue.dequeue()
-            # extra for search - set the current vertex to the LAST element of the PATH 
             current_vertex = current_path[-1]
 
-            # Check if the current vertex has not been visited:
-        # need to update this with logic to see if the room has any unvisited directions 
-            if current_vertex not in visited_vertices:
+            # to keep track of unvisited directions of current_vertex
+            unvisited_directions = []
 
-                # CHECK IF THE CURRENT VERTEX IS DESTINATION 
-                # IF IT IS, STOP AND RETURN
-                # extra for search 
-                if current_vertex == destination_vertex:
-                    return current_path
+            # loop through all the exits for the current room 
+            for exit_direction in current_vertex.get_exits():
+            # if the neighboring room in this direction (exit_direction) is not in visited, add that direction to unvisited_directions
+                if current_vertex.get_room_in_direction(exit_direction) not in visited:
+                    unvisited_directions.append(exit_direction)
+            
+            # if there are any moves to unvisited rooms 
+            if len(unvisited_directions) > 0:
+                # slicing off first room because that's where we already were 
+                return current_path[1:] 
 
-                # Mark the current vertex as visited
-                visited_vertices.add(current_vertex)
-
-            # need to define a get_neighbors function - draw from dft logic line 124-130 --
+            # otherwise, there are still no moves to unvisited rooms, keep searching 
+            else:
+            # loop through the exit directions for the current_vertex (current_room) and tack the rooms at those directions on to the list of new paths 
                 for exit_direction in current_vertex.get_exits():
                 # Queue up NEW paths with each neighbor:
                     # append the neighbor to current path 
-                    # extra for search 
                     new_path = list(current_path)
                     new_path.append(current_vertex.get_room_in_direction(exit_direction))
                     # queue up NEW path    
@@ -152,11 +148,26 @@ def path_finder():
             # add backtracking move to traversal_path - direction masterlist 
             traversal_path.append(reverse[last])
             
-            # alternative - try bfs here - send out the sonar for closest room with unexplored neighbors 
-            # what extra parameters do I need to pass into bfs - going to be grabbing some of the logic from the dft above 
-            # keep track of the path to get there, and when you find it - return that path (list of rooms may need to be translated to list of directions)
-            # append that path to the master list 
-            # loop through that path and make all of those moves with player.travel 
+            # maybe more efficient alternative - send out the sonar for closest room with unexplored neighbors 
+
+            # found path to closest room with an unexplored exit 
+            # found_path = bfs(player.current_room, visited)
+            # print(found_path[0])
+
+            #  when this loop ends - the current room should be updated to a room with an unexplored exit - can restart with dft 
+            # for room in found_path:
+            #     # add room to visited rooms 
+            #     visited.add(room)
+            #     # print(visited)
+            #     # loop through the exit directions of the current room 
+            #     for exit_direction in player.current_room.get_exits():
+            #         # if the room at this particular exit direction is the room in found path (room toward the closest unexplored room)
+            #         if player.current_room.get_room_in_direction(exit_direction) == room:
+            #             # add that direction to the traversal_path masterlist
+            #             traversal_path.append(exit_direction)
+            #             # make the player travel that way so current room is updated and loop can start over 
+            #             player.travel(exit_direction)
+            #             # print(player.current_room)
             
 
 # call function to populate traversal_path 
